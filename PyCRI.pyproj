@@ -26,8 +26,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="pycri\libadxe\adx_errs.py" />
+    <Compile Include="pycri\libadxe\adx_suht.py" />
     <Compile Include="pycri\libadxe\adx_sumf.py" />
     <Compile Include="pycri\libadxe\cri_cvfs.py" />
+    <Compile Include="pycri\libadxe\htci.py" />
     <Compile Include="pycri\libadxe\main.py" />
     <Compile Include="pycri\libadxe\mfci.py" />
     <Compile Include="pycri\libadxe\svm.py" />
