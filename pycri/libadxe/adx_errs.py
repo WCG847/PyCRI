@@ -1,13 +1,9 @@
-from typing import Any
-
-from svm import SVM_CallErr
-
-adxerr_msg: list[int]
 adxerr_func = None
 adxerr_obj = None
-def ADXERR_CallErrFunc1(msg: bytearray, obj: Any):
-	global adxerr_msg
-	adxerr_msg = [x for x in msg]
+from svm import SVM_CallErr
+
+def ADXERR_CallErrFunc1(msg: str):
+	adxerr_msg = msg[:256]
 	if not adxerr_func:
 		SVM_CallErr(adxerr_msg)
-
+	raise ValueError(msg)

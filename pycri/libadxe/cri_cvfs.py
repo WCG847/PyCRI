@@ -1,68 +1,86 @@
-from typing import Any, Callable
+from typing import Callable
+from ctypes import c_char, c_ubyte, cast
 
 cvfs_errfn = None
+
 cvfs_errobj = None
-cvfs_tbl: list[tuple[list[Callable], bytearray]] = []
+cvfs_build = "\nCVFS/PS2EE Ver.2.39 Build:Feb  8 2005 17:53:47\n"
+cvfs_tbl = []
+cvfs_defdevice = []
+def cvFsCallUsrErrFn():...
+def addDevice(name: bytearray, fn):
+	toUpperStr(name)
+	IF_TBL: list[Callable] = fn()
+	dev = getDevice(name)
+	if not dev:
+		global cvfs_tbl
+		cvfs_tbl.append((IF_TBL, name))
+	return IF_TBL
 
-def toUpperStr(name: bytearray):
-	name = memoryview(name).cast('b')
-	size = len(name)
-	for i, c in enumerate(name):
-		v1 = (c - 0x20)
-		c = (c - 0x61)
-		if c < 0x1A:
-			name[i] = v1
 
-
-def addDevice(device_name: bytearray, fn: Callable):
-	toUpperStr(device_name)
-	result = fn()
-	ok = getDevice(device_name)
-	if not ok: 
-		if not any(dev_name == device_name for _, dev_name in cvfs_tbl):
-			cvfs_tbl.append((result, device_name))
-			return result
-def getDevice(device_name: bytearray):
-	for vtable, dev_name in cvfs_tbl:
-		if dev_name == device_name:
-			return device_name
-
+def getDevice(name: bytearray):
+	length = len(name)
+	try:
+		for vtable, device in cvfs_tbl:
+			if device == name:
+				return (vtable, device)
+	except Exception:
+		return 0
 	return 0
 
 
+def toUpperStr(name: bytearray):
+	length = len(name)
+	if length != 0:
+		for i in range(length):
+			letter = name[i] & 0xFF
+			v1 = (letter - 32) & 0xFF
+			v0 = (letter - 97) & 0xFF
+			if v0 < 26:
+				name[i] = (-v1) & 0xFF
 
-def cvFsEntryErrFunc(fn: Callable, obj: Any):
+
+def cvFsEntryErrFunc(fn: Callable, obj):
 	global cvfs_errfn, cvfs_errobj
 	if fn:
 		cvfs_errfn = fn
 		cvfs_errobj = obj
 
-def cvFsAddDev(device_name: bytearray, fn: Callable):
-	if not device_name:
-		cvFsError(b'cvFsAddDev #1:illegal device name\0')
-	elif not fn:
-		cvFsError(b'cvFsAddDev #2:illegal I/F func name\0')
-	vtable = addDevice(device_name, fn)
-	if not vtable:
-		cvFsError(b'cvFsAddDev #3:failed added a device\0')
-	got = vtable[1]
-	got()
+
+def cvFsError(msg: str):
+	global cvfs_errfn, cvfs_errobj
+	cvFsCallUsrErrFn(msg)
 
 
-def cvFsSetDefDev(device_name: bytearray):
-	if not device_name:
-		cvFsError(b'cvFsSetDefDev #1:illegal device name\0')
-
-	elif len(device_name) != 0:
-		toUpperStr(device_name)
-
-def isExistDev(device_name: bytearray):
-
-
-
-def cvFsError(msg: bytearray):
-	cvFsCallUsrErrFn(cvfs_errobj, msg)
-
-def cvFsCallUsrErrFn(obj: Any, msg: bytearray):
+def cvFsCallUsrErrFn(msg: str):
 	if cvfs_errfn:
-		cvfs_errfn(obj, msg)
+		cvfs_errfn(cvfs_errobj, msg)
+
+
+def cvFsAddDev(name: bytearray, fn: Callable):
+	global cvfs_build
+	if not name:
+		cvFsError("cvFsAddDev #1:illegal device name")
+	elif not fn:
+		cvFsError("cvFsAddDev #2:illegal I/F func name")
+	interface = addDevice(name, fn)
+	if interface:
+		if interface[1]:
+			interface[1](cvFsEntryErrFunc, None)
+
+def isExistDev(name, length):
+	for interface, device in cvfs_tbl:
+		if device == name:
+			return 1
+	return 0
+
+def cvFsSetDefDev(name: bytearray):
+	if not name:
+		cvFsError('cvFsSetDefDev #1:illegal device name')
+	if len(name) != 0:
+		toUpperStr(name)
+		ok = isExistDev(name, name.__len__())
+		if not ok:
+			cvFsError("cvFsSetDefDev #2:unknown device name")
+		global cvfs_defdevice
+		cvfs_defdevice.append(name)
