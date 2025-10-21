@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="pycri\libadxe\adx_sumf.py" />
+    <Content Include="README.MD" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="pycri\libadxe\adx_errs.py" />
@@ -34,6 +35,7 @@
     <Compile Include="pycri\libadxe\cri_cvfs.py" />
     <Compile Include="pycri\libadxe\cri_srd.py" />
     <Compile Include="pycri\libadxe\dvci.py" />
+    <Compile Include="pycri\libadxe\dvci_sub.py" />
     <Compile Include="pycri\libadxe\htci.py" />
     <Compile Include="pycri\libadxe\main.py" />
     <Compile Include="pycri\libadxe\mfci.py" />

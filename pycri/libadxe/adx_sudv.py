@@ -20,3 +20,8 @@ def ADXPS2_SetupDvdFs(system_param: list):
 	if system_param:
 		dvCiSetRdMode(system_param[2], system_param[3], system_param[4], system_param[5])
 		dvCiSetRootDir(system_param[0])
+
+
+def ADXPS2_LoadFcacheDvd(system_param: list):
+	if system_param:
+		dvCiLoadFcache(system_param[0], system_param[2], system_param[3], system_param[1])
