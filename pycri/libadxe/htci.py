@@ -1,4 +1,4 @@
-from cri_srd import SRD_SetFilesystem64
+from cri_srd import SRD_SetFilesystem64, SRD_SetLockHost
 from typing import Callable
 
 
@@ -31,7 +31,7 @@ def htCiSetOpenMode(unk):
 		htg_ci_open_mode = 0x8001
 
 def htCiSetLockHost(mode=0):
-	SRD_SetFilesystem64(mode)
+	SRD_SetLockHost(mode)
 
 
 def htCiGetInterface():

@@ -1,7 +1,7 @@
 from adx_errs import ADXERR_CallErrFunc1
 from cri_cvfs import cvFsEntryErrFunc, cvFsAddDev
 from mfci import mfCiGetInterface
-from htci import htCiGetInterface, htCiSetFileSystem64, htCiSetOpenMode, htCiSetRootDir
+from htci import htCiGetInterface, htCiSetFileSystem64, htCiSetLockHost, htCiSetOpenMode, htCiSetRootDir
 
 def adxps2_err_host(obj, msg: str):
 	ADXERR_CallErrFunc1(msg)
@@ -17,3 +17,5 @@ def ADXPS2_SetupHostFs(system_param: list):
 		htCiSetRootDir(system_param[0])
 		if not system_param[2]:
 			htCiSetFileSystem64(1)
+		if not system_param[3]:
+			htCiSetLockHost(0)
