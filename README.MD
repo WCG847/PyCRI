@@ -16,4 +16,4 @@ PyCRI is an initiative to replicate the CRIWare logic on PS2. Using Python with 
 | Add core logic | DVD, Host, Memory | Subsystem Logic | W.I.P.
 <!-- EOT -->
 ## NOTICE
-THIS PROJECT IS NOT 
+THIS PROJECT IS NOT ASSOCIATED WITH CRI Middleware Co., Ltd.®. THIS IS SOLELY AN INDEPENDENT RECREATION.
